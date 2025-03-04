@@ -1,0 +1,66 @@
+SQLiteClientApp {
+
+    Input {
+        width: 80%;
+        margin: 1;
+        border: round gold;
+    }
+
+    Button {
+        margin: 1;
+        width: 30;
+    }
+
+}
+
+DatabaseViewer {
+    background: $panel-lighten-1;
+
+}
+
+DatabaseStructurePane {
+    Tree {
+        margin: 1;
+        border: round gold;
+    }
+}
+
+TableViewerPane {
+    Select {
+        margin: 1;
+        border: round gold;
+    }
+
+    DataTable {
+        margin: 1;
+        border: round gold;
+        height: 1fr;
+    }
+}
+
+ExecuteSQLPane {
+    background: $panel-lighten-1;
+
+    TextArea {
+        height: 20%;
+        margin: 1;
+        border: round gold;
+    }
+
+    Button {
+        margin: 1;
+    }
+
+    DataTable {
+        background: $secondary-lighten-1;
+        height: 1fr;
+        border: round gold;
+        margin: 1;
+    }
+
+    RichLog {
+        height: 20%;
+        margin: 1;
+        border: round gold;
+    }
+}
