@@ -16,7 +16,7 @@ The instructions assume you have uv or pip installed.
 
 ### PyPi
 
-`uv tool install squall`
+`uv tool install squall_sql`
 
 ### Using uv on GitHub
 
