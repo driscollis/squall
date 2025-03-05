@@ -56,7 +56,7 @@ Discussions = "https://github.com/driscollis/squall/discussions"
 Wiki = "https://github.com/driscollis/squall/wiki"
 
 [project.scripts]
-squall = "squall.__main__:app"
+squall = "squall.squall:main"
 
 [build-system]
 requires = [

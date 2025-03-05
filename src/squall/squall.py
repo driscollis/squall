@@ -61,7 +61,9 @@ class SQLiteClientApp(App):
         tabbed_content.active = "db_structure"
         self.title = f"Squall - {db_file_path}"
 
-
-if __name__ == "__main__":
+def main():
     app = SQLiteClientApp()
     app.run()
+
+if __name__ == "__main__":
+    main()
