@@ -1,9 +1,13 @@
 # execute_sql.py
 
-import db_utility
 import sqlite3
 import time
 
+try:
+    import db_utility
+except ModuleNotFoundError:
+    from . import db_utility
+    
 from pathlib import Path
 from rich.text import Text
 from textual import on
