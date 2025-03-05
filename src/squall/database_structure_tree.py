@@ -1,9 +1,6 @@
 # database_structure.py
 
-try:
-    import db_utility
-except ModuleNotFoundError:
-    from . import db_utility
+from squall import db_utility
 
 from pathlib import Path
 from textual.app import ComposeResult

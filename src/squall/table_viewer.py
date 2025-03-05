@@ -1,9 +1,6 @@
 # table_viewer.py
 
-try:
-    import db_utility
-except ModuleNotFoundError:
-    from . import db_utility
+from squall import db_utility
 
 from pathlib import Path
 from textual import on

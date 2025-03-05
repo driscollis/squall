@@ -12,17 +12,6 @@ from squall.execute_sql import ExecuteSQLPane
 from squall.screens import FileBrowser
 from squall.table_viewer import TableViewerPane
 
-# try:
-#     from database_structure_tree import DatabaseStructurePane
-#     from execute_sql import ExecuteSQLPane
-#     from screens import FileBrowser
-#     from table_viewer import TableViewerPane
-# except ModuleNotFoundError:
-#     from .database_structure_tree import DatabaseStructurePane
-#     from .execute_sql import ExecuteSQLPane
-#     from .screens import FileBrowser
-#     from .table_viewer import TableViewerPane
-
 
 class SQLiteClientApp(App):
 
