@@ -109,6 +109,3 @@ def run_row_update(db_path: str, sql: str, column_values: list, primary_key_valu
     cursor = conn.cursor()
     cursor.execute(sql, (*column_values, primary_key_value))
     conn.commit()
-
-#get_schema(r"C:\books\creating_tuis\code\20_sqlite_client\v2\library.db")
-get_schema(r"C:\Chinook_Sqlite.sqlite")
