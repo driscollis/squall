@@ -10,7 +10,7 @@ Here is what Squall looks like using the [Chinook database](https://github.com/l
 
 ## Prerequisites
 
-The instructions assume you have uv installed.
+The instructions assume you have uv or pip installed.
 
 ## Installation
 
@@ -22,7 +22,9 @@ The instructions assume you have uv installed.
 
 `uv tool install git+https://github.com/driscollis/squall -U --force`
 
-### Update the Installation
+## Update the Installation
+
+If you want to upgrade to the latest version of Squall SQL, then you will want to run one of the following commands.
 
 ### Using uv on GitHub
 
