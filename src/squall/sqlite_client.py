@@ -1,4 +1,4 @@
-# sqlite_client_v3.py
+# sqlite_client.py
 
 from pathlib import Path
 from textual import on
