@@ -44,12 +44,9 @@ class SQLiteClientApp(App):
 
     @on(Button.Pressed, "#open_db_btn")
     async def action_open_database(self) -> None:
-        #self.push_screen(FileBrowser(), self.update_ui)
-        await self.update_ui(r"C:\Chinook_Sqlite.sqlite")
-        #await self.update_ui(r"C:\books\creating_tuis\code\20_sqlite_client\v2\library.db")
-
+        self.push_screen(FileBrowser(), self.update_ui)
+        
     async def update_ui(self, db_file_path: str) -> None:
-        #self.notify(db_file_path)
         if not Path(db_file_path).exists():
             self.notify("BAD PATH")
             return
