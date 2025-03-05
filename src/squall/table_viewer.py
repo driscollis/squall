@@ -23,7 +23,7 @@ class TableViewerPane(TabPane):
 
     def compose(self) -> ComposeResult:
         yield Select.from_values(self.tables, id="table_names_select", value=self.tables[0])
-        yield Button("Edit Row", id="edit_row_btn", variant="primary")
+        # yield Button("Edit Row", id="edit_row_btn", variant="primary")
         yield DataTable(id="sqlite_table_data")
 
     def on_mount(self) -> None:
