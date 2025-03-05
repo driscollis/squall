@@ -1,4 +1,4 @@
-# sqlite_client.py
+# squall.py
 
 from pathlib import Path
 from textual import on
@@ -19,7 +19,7 @@ class SQLiteClientApp(App):
         ("q", "quit", "Exit the program"),
     ]
 
-    CSS_PATH = "sqlite_client.tcss"
+    CSS_PATH = "squall.tcss"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
