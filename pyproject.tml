@@ -1,0 +1,106 @@
+[project]
+name = "squall"
+dynamic = [
+    "version",
+]
+description = "Squall - SQLite Editor"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Mike Driscoll", email = "mike@pythonlibrary.org" },
+]
+maintainers = [
+    { name = "Mike Driscoll", email = "mike@pythonlibrary.org" },
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Environment :: Console",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Other Audience",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+keywords = [
+    "tui",
+    "sql",
+    "sqlite",
+    "terminal",
+]
+dependencies = [
+    "rich>=13.9.4",
+    "textual>=2.1.1",
+]
+packages = [
+    "src/squall",
+]
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+Homepage = "https://github.com/driscollis/squall"
+Documentation = "https://github.com/driscollis/squall/blob/main/README.md"
+Repository = "https://github.com/driscollis/squall"
+Issues = "https://github.com/driscollis/squall/issues"
+Discussions = "https://github.com/driscollis/squall/discussions"
+Wiki = "https://github.com/driscollis/squall/wiki"
+
+[project.scripts]
+squall = "squall.__main__:app"
+
+[build-system]
+requires = [
+    "hatchling",
+    "wheel",
+]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "build>=1.2.1",
+    "ruff>=0.9.3",
+    "pyinstrument>=5.0.1",
+    "textual-dev>=2.1.0",
+]
+
+[tool.hatch.version]
+path = "src/squall/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+    "src/squall",
+]
+include = [
+    "py.typed",
+    "**/*.py",
+    "**/*.html",
+    "**/*.gif",
+    "**/*.jpg",
+    "**/*.png",
+    "**/*.md",
+    "**/*.tcss",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/squall",
+    "LICENSE",
+    "README.md",
+    "pyproject.toml",
+]
+exclude = [
+    "*.pyc",
+    "__pycache__",
+    "*.so",
+    "*.dylib",
+]
