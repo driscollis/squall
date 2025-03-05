@@ -7,10 +7,16 @@ from textual.containers import Center
 from textual.widgets import Button, Footer, Header, Input
 from textual.widgets import Label, TabbedContent, TabPane
 
-from database_structure_tree import DatabaseStructurePane
-from execute_sql import ExecuteSQLPane
-from screens import FileBrowser
-from table_viewer import TableViewerPane
+try:
+    from database_structure_tree import DatabaseStructurePane
+    from execute_sql import ExecuteSQLPane
+    from screens import FileBrowser
+    from table_viewer import TableViewerPane
+except ModuleNotFoundError:
+    from .database_structure_tree import DatabaseStructurePane
+    from .execute_sql import ExecuteSQLPane
+    from .screens import FileBrowser
+    from .table_viewer import TableViewerPane
 
 
 class SQLiteClientApp(App):
