@@ -15,7 +15,8 @@ class DatabaseStructurePane(TabPane):
     def __init__(self, db_path: Path, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.db_path = db_path
-        self.db_schema = db_utility.get_schema(self.db_path)
+        if self.db_path.exists():
+            self.db_schema = db_utility.get_schema(self.db_path)
 
     def compose(self) -> ComposeResult:
         tree: Tree[str] = Tree(f"Tables ({len(self.db_schema.keys())})")
