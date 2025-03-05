@@ -34,7 +34,7 @@ If you want to upgrade to the latest version of Squall SQL, then you will want t
 
 Update the version number as appropriate:
 
-`pip install squall-sql==0.0.1`
+`pip install squall-sql`
 
 ## License
 
