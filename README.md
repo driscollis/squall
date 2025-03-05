@@ -1,4 +1,4 @@
-# Squall
+# Squall SQLite Editor
 
 Squall is a SQLite viewer and editor that runs in your terminal. Squall is written in Python and uses the [Textual package](https://github.com/Textualize/)
 
@@ -27,6 +27,12 @@ The instructions assume you have uv installed.
 ### Using uv on GitHub
 
 `uv tool install git+https://github.com/driscollis/squall -U --force`
+
+## Installing Using pip
+
+Update the version number as appropriate:
+
+`pip install squall-sql==0.0.1`
 
 ## License
 

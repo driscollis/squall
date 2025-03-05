@@ -1,5 +1,5 @@
 [project]
-name = "squall"
+name = "squall_sql"
 dynamic = [
     "version",
 ]
