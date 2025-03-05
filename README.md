@@ -8,7 +8,26 @@ Here is what Squall looks like using the [Chinook database](https://github.com/l
 
 ![squall_demo](https://github.com/user-attachments/assets/ecac6ac3-4d42-4d3d-9c15-2e129102a087)
 
+## Prerequisites
+
+The instructions assume you have uv installed.
 
 ## Installation
 
+### PyPi
 
+`uv tool install squall`
+
+### Using uv on GitHub
+
+`uv tool install git+https://github.com/driscollis/squall -U --force`
+
+### Update the Installation
+
+### Using uv on GitHub
+
+`uv tool install git+https://github.com/driscollis/squall -U --force`
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/driscollis/squall/blob/main/LICENSE) file for details.
