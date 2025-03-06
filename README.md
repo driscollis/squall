@@ -20,7 +20,7 @@ The instructions assume you have uv or pip installed.
 
 ### Using uv on GitHub
 
-`uv tool install git+https://github.com/driscollis/squall -U --force`
+`uv tool install git+https://github.com/driscollis/squall`
 
 ## Update the Installation
 
