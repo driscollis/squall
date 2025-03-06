@@ -34,37 +34,86 @@ def get_schema(db_path: str) -> dict[str, dict]:
     result = cursor.fetchall()
 
     tables = {}
-    for table in result:
-        if table[0] == "index":
-            # skip it
+    for item in result:
+        _, table_name, _, _, schema = item
+
+        if schema is None:
             continue
 
-        table_name = table[1]
-        schema = table[4]
-        columns = {}
-        for item in schema.split("\n")[1:]:
-            item_no_commas = item.replace(",", "")
-            if "PRIMARY KEY" in item_no_commas or len(item_no_commas) <= 1 or "FOREIGN KEY" in item_no_commas:
-                # skip it
-                continue
-            if "ON" in item_no_commas and "DELETE" in item_no_commas:
-                continue
-
-            items = [i.strip() for i in item.split(",") if i]
-            for item in items:
-                column_name, column_type, *_ = item.split()
-                column_name = column_name.replace('"', "").replace("[", "").replace("]", "")
-                column_name = column_name.replace("(", "").replace(")", "")
-                column_schema = item
-                column_schema = column_schema.replace("\t", "")
-                columns[column_name] = {}
-                columns[column_name]["Type"] = column_type
-                columns[column_name]["Schema"] = column_schema
-        tables[table_name] = {}
-        tables[table_name]["Schema"] = schema
-        tables[table_name]["Columns"] = columns
+        if "CREATE TABLE" in schema:
+            fields = parse_out_fields(schema)
+            tables[table_name] = {}
+            tables[table_name]["Schema"] = schema
+            tables[table_name]["Columns"] = fields
 
     return tables
+
+def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
+    fields = {}
+    schema = schema.replace("\t", "")
+    for line in schema.split("\n")[1:]:
+        line = line.strip()
+
+        if not line:
+            continue
+
+        if len(line) == 1:
+            continue
+
+        if line.startswith("FOREIGN KEY") or line.startswith("PRIMARY KEY"):
+            continue
+
+        if line.startswith("ON DELETE"):
+            continue
+
+        if line.startswith("CONSTRAINT "):
+            continue
+
+
+        field_schema = parse_field_schema(line)
+
+        if line.endswith(",") and line.count(",") == 1:
+            parse_fields(line, fields, field_schema)
+        elif line.count(",") == 0:
+            parse_fields(line, fields, field_schema)
+        elif (line.startswith("(") and line.count(",") >= 1) or line.endswith(")") and line.count(",") >= 1:
+            for sub_line in line.split(","):
+                if sub_line:
+                    field_schema = parse_field_schema(sub_line)
+                    parse_fields(sub_line, fields, field_schema)
+        elif line.endswith(","):
+            parse_fields(line, fields, field_schema)
+        else:
+            print(line)
+            raise NotImplementedError
+
+    return fields
+
+def parse_fields(line: str, fields: dict, field_schema: str) -> dict[str, dict[str, str]]:
+    # Clean line
+    line = line.replace("[", "")
+    line = line.replace("]", "")
+    line = line.replace("(", "")
+    line = line.replace(")", "")
+    line = line.replace(",", "")
+
+    field_name, field_type, *_ = line.split()
+    fields[field_name] = {}
+    fields[field_name]["Type"] = field_type
+    fields[field_name]["Schema"] = field_schema
+    return fields
+
+def parse_field_schema(line: str) -> str:
+    field_schema = line.strip()
+    field_name, *parts = field_schema.split()
+    field_schema = field_schema.replace(",", "")
+    field_name = field_name.replace("[", '"')
+    field_name = field_name.replace("]", '"')
+    field_name = field_name.replace("(", "")
+    field_name = field_name.replace(")", "")
+    field_schema = f'"{field_name}" {" ".join(parts)}'
+    field_schema = field_schema.replace(",", "")
+    return field_schema
 
 def get_primary_keys(db_path: str, table_name: str) -> list[tuple[str]]:
     conn = sqlite3.connect(db_path)
@@ -87,7 +136,7 @@ def get_column_types(db_path: str, table_name: str) -> dict[str, str]:
 
 def run_sql(db_path: str, sql: str) -> list[tuple]:
     """
-    Runs the user provided SQL. This may be a select, update, drop
+    Runs the user-provided SQL. This may be a select, update, drop
     or any other SQL command
 
     If there are results, they will be returned
@@ -103,7 +152,7 @@ def run_sql(db_path: str, sql: str) -> list[tuple]:
 
 def run_row_update(db_path: str, sql: str, column_values: list, primary_key_value) -> None:
     """
-    Update a row the database using the supplied SQL command(s)
+    Update a row in the database using the supplied SQL command(s)
     """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
