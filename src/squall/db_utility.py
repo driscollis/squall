@@ -61,21 +61,8 @@ def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
     for line in lines:
         line = line.strip()
 
-        if not line:
+        if not line_is_table_field(line):
             continue
-
-        if len(line) == 1:
-            continue
-
-        if line.startswith("FOREIGN KEY") or line.startswith("PRIMARY KEY"):
-            continue
-
-        if line.startswith("ON DELETE"):
-            continue
-
-        if line.startswith("CONSTRAINT "):
-            continue
-
 
         field_schema = parse_field_schema(line)
 
@@ -85,6 +72,9 @@ def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
             parse_fields(line, fields, field_schema)
         elif (line.startswith("(") and line.count(",") >= 1) or line.endswith(")") and line.count(",") >= 1:
             for sub_line in line.split(","):
+                sub_line = sub_line.strip()
+                if not line_is_table_field(sub_line):
+                    continue
                 if sub_line:
                     field_schema = parse_field_schema(sub_line)
                     parse_fields(sub_line, fields, field_schema)
@@ -95,6 +85,24 @@ def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
             raise NotImplementedError
 
     return fields
+
+def line_is_table_field(line: str) -> bool:
+    if not line:
+        return False
+
+    if len(line) == 1:
+        return False
+
+    if line.startswith("FOREIGN KEY") or line.startswith("PRIMARY KEY"):
+        return False
+
+    if line.startswith("ON DELETE"):
+        return False
+
+    if line.startswith("CONSTRAINT "):
+        return False
+
+    return True
 
 def parse_fields(line: str, fields: dict, field_schema: str) -> dict[str, dict[str, str]]:
     # Clean line
