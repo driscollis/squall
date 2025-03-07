@@ -7,7 +7,7 @@ from squall.screens import WarningScreen
 from squall import db_utility
 
 from textual import on
-from textual.app import ComposeResult, App
+from textual.app import ComposeResult
 from textual.containers import Horizontal, VerticalScroll
 
 from textual.screen import ModalScreen
