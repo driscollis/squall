@@ -43,9 +43,9 @@ class SQLiteClientApp(App):
 
     @on(Button.Pressed, "#open_db_btn")
     async def action_open_database(self) -> None:
-        self.push_screen(FileBrowser(), self.update_ui)
+        self.push_screen(FileBrowser(), self.update_ui)  # type: ignore
 
-    async def update_ui(self, db_file_path: str) -> None:
+    async def update_ui(self, db_file_path: Path) -> None:
         if not Path(db_file_path).exists():
             self.notify("BAD PATH")
             return

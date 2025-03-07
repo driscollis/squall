@@ -1,29 +1,30 @@
 # edit_row.py
 
-import db_utility
 import sqlite3
+from pathlib import Path
 
-from screens import WarningScreen
+from squall.screens import WarningScreen
+from squall import db_utility
 
 from textual import on
-from textual.app import ComposeResult, App
+from textual.app import ComposeResult
 from textual.containers import Horizontal, VerticalScroll
 
-# from textual.screen import ModalScreen
+from textual.screen import ModalScreen
 from textual.widgets import Button, Input
 
 
-class EditRowScreen(App):
+class EditRowScreen(ModalScreen):
     """
     Edit a row of data shown in the Table Viewer in the database
     """
 
     def __init__(
         self,
-        data: dict[str, str],
+        data: dict[str, tuple],
         table_name: str,
         primary_keys: tuple[str],
-        db_path: str,
+        db_path: Path,
         *args,
         **kwargs,
     ) -> None:
@@ -35,7 +36,7 @@ class EditRowScreen(App):
         self.title = f"Editing {table_name}"
 
     def compose(self) -> ComposeResult:
-        children = []
+        children: list[Input | Horizontal] = []
         for field_name in self.data:
             disabled = True if field_name in self.primary_keys else False
             field = Input(
@@ -79,7 +80,7 @@ class EditRowScreen(App):
         if len(primary_keys[0]) == 1:
             primary_key = primary_keys[0][0]
             primary_key_value = self.query_one(f"#{primary_key}", Input).value
-            sql = f"UPDATE {table_name} SET {set_clause} WHERE {primary_key} = ?"
+            sql = f"UPDATE {self.table_name} SET {set_clause} WHERE {primary_key} = ?"
             print(sql, (*column_values, primary_key_value))
 
         try:
@@ -90,13 +91,13 @@ class EditRowScreen(App):
             self.app.push_screen(WarningScreen(f"[red]ERROR Committing data:[/] {e}"))
 
 
-data = dict(
-    zip(
-        ("AlbumId", "Title", "ArtistId"),
-        [1, "For Those About To Rock We Salute You", 1],
-    )
-)
-table_name = "Album"
-primary_keys = ("AlbumId",)
-app = EditRowScreen(data, table_name, primary_keys, r"C:\Chinook_Sqlite.sqlite")
-app.run()
+# data = dict(
+# zip(
+# ("AlbumId", "Title", "ArtistId"),
+# [1, "For Those About To Rock We Salute You", 1],
+# )
+# )
+# table_name = "Album"
+# primary_keys = ("AlbumId",)
+# app = EditRowScreen(data, table_name, primary_keys, Path(r"C:\Chinook_Sqlite.sqlite"))
+# app.run()

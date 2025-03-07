@@ -2,8 +2,10 @@
 
 import sqlite3
 
+from pathlib import Path
 
-def get_table_names(db_path: str) -> list[str]:
+
+def get_table_names(db_path: Path) -> list[str]:
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
@@ -12,7 +14,7 @@ def get_table_names(db_path: str) -> list[str]:
     return table_names
 
 
-def get_data_from_table(db_path: str, table_name: str) -> list[tuple]:
+def get_data_from_table(db_path: Path, table_name: str) -> list[tuple]:
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -27,14 +29,14 @@ def get_data_from_table(db_path: str, table_name: str) -> list[tuple]:
     return data
 
 
-def get_schema(db_path: str) -> dict[str, dict]:
+def get_schema(db_path: Path) -> dict[str, dict]:
     sql = "SELECT * FROM sqlite_master;"
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
 
-    tables = {}
+    tables: dict[str, dict] = {}
     for item in result:
         _, table_name, _, _, schema = item
 
@@ -51,7 +53,7 @@ def get_schema(db_path: str) -> dict[str, dict]:
 
 
 def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
-    fields = {}
+    fields: dict[str, dict] = {}
     schema = schema.replace("\t", "")
 
     if "\n" in schema:
@@ -147,7 +149,7 @@ def parse_field_schema(line: str) -> str:
     return field_schema
 
 
-def get_primary_keys(db_path: str, table_name: str) -> list[tuple[str]]:
+def get_primary_keys(db_path: Path, table_name: str) -> list[tuple[str]]:
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     sql = f'SELECT l.name FROM pragma_table_info("{table_name}") as l WHERE l.pk <> 0;'
@@ -156,7 +158,7 @@ def get_primary_keys(db_path: str, table_name: str) -> list[tuple[str]]:
     return result
 
 
-def get_column_types(db_path: str, table_name: str) -> dict[str, str]:
+def get_column_types(db_path: Path, table_name: str) -> dict[str, str]:
     """
     Get all the column data types and return it as a dictionary
     """
@@ -168,7 +170,7 @@ def get_column_types(db_path: str, table_name: str) -> dict[str, str]:
     return {key: value for _, key, value, *_ in result}
 
 
-def run_sql(db_path: str, sql: str) -> list[tuple]:
+def run_sql(db_path: Path, sql: str) -> list[tuple]:
     """
     Runs the user-provided SQL. This may be a select, update, drop
     or any other SQL command
@@ -186,7 +188,7 @@ def run_sql(db_path: str, sql: str) -> list[tuple]:
 
 
 def run_row_update(
-    db_path: str, sql: str, column_values: list, primary_key_value
+    db_path: Path, sql: str, column_values: list, primary_key_value
 ) -> None:
     """
     Update a row in the database using the supplied SQL command(s)

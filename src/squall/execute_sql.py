@@ -21,7 +21,7 @@ class ExecuteSQLPane(TabPane):
     def compose(self) -> ComposeResult:
         text = TextArea(id="sql_commands")
         text.border_title = "SQL"
-        results = DataTable(id="sql_results_table", zebra_stripes=True)
+        results: DataTable = DataTable(id="sql_results_table", zebra_stripes=True)
         results.border_title = "SQL Results"
         sql_command_output = RichLog(id="sql_log")
         sql_command_output.border_title = "SQL Output / Status"
