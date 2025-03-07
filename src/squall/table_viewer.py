@@ -18,7 +18,7 @@ class TableViewerPane(TabPane):
         self.tables = db_utility.get_table_names(self.db_path)
         self.tables.sort()
         self.selected_row_key = None
-        self.columns = None
+        self.columns: tuple = tuple()
 
     def compose(self) -> ComposeResult:
         yield Select.from_values(
@@ -32,7 +32,7 @@ class TableViewerPane(TabPane):
 
     @on(Select.Changed, "#table_names_select")
     def update_sqlite_table_view(self) -> None:
-        current_table = self.app.query_one("#table_names_select").value
+        current_table = str(self.app.query_one("#table_names_select", Select).value)
         data = db_utility.get_data_from_table(self.db_path, current_table)
         self.columns = data[0]
         table = self.query_one(DataTable)
@@ -48,13 +48,13 @@ class TableViewerPane(TabPane):
     @on(DataTable.RowSelected)
     @on(DataTable.RowHighlighted)
     def on_row_clisked(self, event: DataTable.RowSelected) -> None:
-        self.selected_row_key = event.row_key
+        self.selected_row_key = event.row_key  # type: ignore
 
     @on(Button.Pressed, "#edit_row_btn")
     def on_edit_row(self) -> None:
-        table = self.app.query_one("#sqlite_table_data")
-        current_table = self.app.query_one("#table_names_select").value
-        primary_keys = db_utility.get_primary_keys(self.db_path, current_table)
+        table = self.app.query_one("#sqlite_table_data", DataTable)
+        current_table = self.app.query_one("#table_names_select", Select).value
+        primary_keys = db_utility.get_primary_keys(self.db_path, current_table)  # type: ignore
         if self.selected_row_key is not None and self.columns is not None:
             print(self.columns)
             print(table.get_row(self.selected_row_key))
