@@ -60,3 +60,8 @@ def test_schema_with_no_line_endings():
     assert result == {'id': {'Schema': '"id" INTEGER PRIMARY KEY', 'Type': 'INTEGER'},
                       'name': {'Schema': '"name" TEXT NOT NULL)', 'Type': 'TEXT'}}
 
+def test_schema_without_types():
+    schema = 'CREATE TABLE sqlite_sequence(name,seq)'
+    result = parse_out_fields(schema)
+    assert result == {'name': {'Schema': '"name" ', 'Type': 'name'},
+                      'seq': {'Schema': '"seq" ', 'Type': 'seq'}}
