@@ -36,7 +36,7 @@ class EditRowScreen(ModalScreen):
         self.title = f"Editing {table_name}"
 
     def compose(self) -> ComposeResult:
-        children: list[Input | Horizontal]= []
+        children: list[Input | Horizontal] = []
         for field_name in self.data:
             disabled = True if field_name in self.primary_keys else False
             field = Input(
@@ -91,13 +91,13 @@ class EditRowScreen(ModalScreen):
             self.app.push_screen(WarningScreen(f"[red]ERROR Committing data:[/] {e}"))
 
 
-#data = dict(
-    #zip(
-        #("AlbumId", "Title", "ArtistId"),
-        #[1, "For Those About To Rock We Salute You", 1],
-    #)
-#)
-#table_name = "Album"
-#primary_keys = ("AlbumId",)
-#app = EditRowScreen(data, table_name, primary_keys, Path(r"C:\Chinook_Sqlite.sqlite"))
-#app.run()
+# data = dict(
+# zip(
+# ("AlbumId", "Title", "ArtistId"),
+# [1, "For Those About To Rock We Salute You", 1],
+# )
+# )
+# table_name = "Album"
+# primary_keys = ("AlbumId",)
+# app = EditRowScreen(data, table_name, primary_keys, Path(r"C:\Chinook_Sqlite.sqlite"))
+# app.run()
