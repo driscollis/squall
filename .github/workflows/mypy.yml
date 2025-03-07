@@ -13,6 +13,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install mypy types-requests
+          pip install textual
       # Include `--format=github` to enable automatic inline annotations.
       - name: Run Mypy
         run: mypy .
