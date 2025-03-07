@@ -51,7 +51,14 @@ def get_schema(db_path: str) -> dict[str, dict]:
 def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
     fields = {}
     schema = schema.replace("\t", "")
-    for line in schema.split("\n")[1:]:
+
+    if "\n" in schema:
+        lines = schema.split("\n")[1:]
+    elif "CREATE TABLE" in schema and "(" in schema:
+        location = schema.find("(")
+        lines = [schema[location:]]
+
+    for line in lines:
         line = line.strip()
 
         if not line:
