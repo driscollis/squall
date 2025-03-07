@@ -104,7 +104,12 @@ def parse_fields(line: str, fields: dict, field_schema: str) -> dict[str, dict[s
     line = line.replace(")", "")
     line = line.replace(",", "")
 
-    field_name, field_type, *_ = line.split()
+    try:
+        field_name, field_type, *_ = line.split()
+    except ValueError:
+        field_name = line
+        field_type = line
+
     fields[field_name] = {}
     fields[field_name]["Type"] = field_type
     fields[field_name]["Schema"] = field_schema
