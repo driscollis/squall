@@ -37,7 +37,6 @@ class WarningScreen(ModalScreen):
 
 
 class FileBrowser(ModalScreen):
-
     BINDINGS = [("escape", "exit_screen", "Exit")]
 
     def __init__(self) -> None:
@@ -50,7 +49,7 @@ class FileBrowser(ModalScreen):
         yield DirectoryTree("/")
         yield Horizontal(
             Button("Open Database", variant="primary", id="load_db_file"),
-            Button("Cancel", variant="error", id="cancel_db_file")
+            Button("Cancel", variant="error", id="cancel_db_file"),
         )
         yield Footer()
 
@@ -75,7 +74,10 @@ class FileBrowser(ModalScreen):
         """
         event.stop()
 
-        if self.selected_file.suffix.lower() not in [".db", ".sqlite"] and self.selected_file.is_file():
+        if (
+            self.selected_file.suffix.lower() not in [".db", ".sqlite"]
+            and self.selected_file.is_file()
+        ):
             self.app.push_screen(WarningScreen("ERROR: You must choose a *.db file!"))
             return
 

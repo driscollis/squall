@@ -8,7 +8,6 @@ from textual.widgets import TabPane, Tree
 
 
 class DatabaseStructurePane(TabPane):
-
     def __init__(self, db_path: Path, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.db_path = db_path

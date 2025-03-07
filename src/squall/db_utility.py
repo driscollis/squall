@@ -26,6 +26,7 @@ def get_data_from_table(db_path: str, table_name: str) -> list[tuple]:
     data.insert(0, column_names)
     return data
 
+
 def get_schema(db_path: str) -> dict[str, dict]:
     sql = "SELECT * FROM sqlite_master;"
     conn = sqlite3.connect(db_path)
@@ -47,6 +48,7 @@ def get_schema(db_path: str) -> dict[str, dict]:
             tables[table_name]["Columns"] = fields
 
     return tables
+
 
 def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
     fields = {}
@@ -70,7 +72,11 @@ def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
             parse_fields(line, fields, field_schema)
         elif line.count(",") == 0:
             parse_fields(line, fields, field_schema)
-        elif (line.startswith("(") and line.count(",") >= 1) or line.endswith(")") and line.count(",") >= 1:
+        elif (
+            (line.startswith("(") and line.count(",") >= 1)
+            or line.endswith(")")
+            and line.count(",") >= 1
+        ):
             for sub_line in line.split(","):
                 sub_line = sub_line.strip()
                 if not line_is_table_field(sub_line):
@@ -85,6 +91,7 @@ def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
             raise NotImplementedError
 
     return fields
+
 
 def line_is_table_field(line: str) -> bool:
     if not line:
@@ -104,7 +111,10 @@ def line_is_table_field(line: str) -> bool:
 
     return True
 
-def parse_fields(line: str, fields: dict, field_schema: str) -> dict[str, dict[str, str]]:
+
+def parse_fields(
+    line: str, fields: dict, field_schema: str
+) -> dict[str, dict[str, str]]:
     # Clean line
     line = line.replace("[", "")
     line = line.replace("]", "")
@@ -123,6 +133,7 @@ def parse_fields(line: str, fields: dict, field_schema: str) -> dict[str, dict[s
     fields[field_name]["Schema"] = field_schema
     return fields
 
+
 def parse_field_schema(line: str) -> str:
     field_schema = line.strip()
     field_name, *parts = field_schema.split()
@@ -135,6 +146,7 @@ def parse_field_schema(line: str) -> str:
     field_schema = field_schema.replace(",", "")
     return field_schema
 
+
 def get_primary_keys(db_path: str, table_name: str) -> list[tuple[str]]:
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -142,6 +154,7 @@ def get_primary_keys(db_path: str, table_name: str) -> list[tuple[str]]:
     cursor.execute(sql)
     result = cursor.fetchall()
     return result
+
 
 def get_column_types(db_path: str, table_name: str) -> dict[str, str]:
     """
@@ -153,6 +166,7 @@ def get_column_types(db_path: str, table_name: str) -> dict[str, str]:
     cursor.execute(sql)
     result = cursor.fetchall()
     return {key: value for _, key, value, *_ in result}
+
 
 def run_sql(db_path: str, sql: str) -> list[tuple]:
     """
@@ -170,7 +184,10 @@ def run_sql(db_path: str, sql: str) -> list[tuple]:
     conn.commit()
     return result
 
-def run_row_update(db_path: str, sql: str, column_values: list, primary_key_value) -> None:
+
+def run_row_update(
+    db_path: str, sql: str, column_values: list, primary_key_value
+) -> None:
     """
     Update a row in the database using the supplied SQL command(s)
     """

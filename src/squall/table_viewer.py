@@ -10,7 +10,6 @@ from textual.widgets import TabPane
 
 
 class TableViewerPane(TabPane):
-
     BINDINGS = [("escape", "exit_screen", "Exit")]
 
     def __init__(self, db_path: Path, *args, **kwargs) -> None:
@@ -22,7 +21,9 @@ class TableViewerPane(TabPane):
         self.columns = None
 
     def compose(self) -> ComposeResult:
-        yield Select.from_values(self.tables, id="table_names_select", value=self.tables[0])
+        yield Select.from_values(
+            self.tables, id="table_names_select", value=self.tables[0]
+        )
         # yield Button("Edit Row", id="edit_row_btn", variant="primary")
         yield DataTable(id="sqlite_table_data")
 
@@ -58,6 +59,3 @@ class TableViewerPane(TabPane):
             print(self.columns)
             print(table.get_row(self.selected_row_key))
             print(primary_keys)
-
-
-
