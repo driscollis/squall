@@ -14,7 +14,6 @@ from textual.widgets import TabPane
 
 
 class ExecuteSQLPane(TabPane):
-
     def __init__(self, db_path: Path, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.db_path = db_path
@@ -37,7 +36,6 @@ class ExecuteSQLPane(TabPane):
         table.add_columns(*data[0])
         table.add_rows(data[1:])
         table.cursor_type = "row"
-
 
     @on(Button.Pressed, "#run_sql_btn")
     def run_sql(self) -> None:

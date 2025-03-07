@@ -14,7 +14,6 @@ from squall.table_viewer import TableViewerPane
 
 
 class SQLiteClientApp(App):
-
     BINDINGS = [
         ("o", "open_database", "Open Database"),
         ("q", "quit", "Exit the program"),
@@ -22,7 +21,7 @@ class SQLiteClientApp(App):
 
     CSS_PATH = "squall.tcss"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.title = "Squall"
 
@@ -31,9 +30,8 @@ class SQLiteClientApp(App):
         db_path.border_title = "Database Path"
         yield Header()
         yield Center(
-            Button("Open Database", id="open_db_btn", variant="primary"),
-            id="center"
-            )
+            Button("Open Database", id="open_db_btn", variant="primary"), id="center"
+        )
         with TabbedContent("Database", id="tabbed_ui"):
             with TabPane("Database Structure"):
                 yield Label("No data loaded")
@@ -46,7 +44,7 @@ class SQLiteClientApp(App):
     @on(Button.Pressed, "#open_db_btn")
     async def action_open_database(self) -> None:
         self.push_screen(FileBrowser(), self.update_ui)
-        
+
     async def update_ui(self, db_file_path: str) -> None:
         if not Path(db_file_path).exists():
             self.notify("BAD PATH")
@@ -55,15 +53,23 @@ class SQLiteClientApp(App):
         tabbed_content = self.query_one("#tabbed_ui", TabbedContent)
         await tabbed_content.clear_panes()
 
-        await tabbed_content.add_pane(DatabaseStructurePane(db_file_path, title="Database Structure", id="db_structure"))
-        await tabbed_content.add_pane(TableViewerPane(db_file_path, title="Table Viewer"))
+        await tabbed_content.add_pane(
+            DatabaseStructurePane(
+                db_file_path, title="Database Structure", id="db_structure"
+            )
+        )
+        await tabbed_content.add_pane(
+            TableViewerPane(db_file_path, title="Table Viewer")
+        )
         await tabbed_content.add_pane(ExecuteSQLPane(db_file_path, title="Execute SQL"))
         tabbed_content.active = "db_structure"
         self.title = f"Squall - {db_file_path}"
 
-def main():
+
+def main() -> None:
     app = SQLiteClientApp()
     app.run()
+
 
 if __name__ == "__main__":
     main()
