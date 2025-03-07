@@ -49,3 +49,14 @@ def test_schema_with_on_delete():
     assert result == {'AlbumId': {'Type': 'INTEGER', 'Schema': '""AlbumId"" INTEGER NOT NULL'},
                       'Title': {'Type': 'NVARCHAR160', 'Schema': '""Title"" NVARCHAR(160) NOT NULL'},
                       'ArtistId': {'Type': 'INTEGER', 'Schema': '""ArtistId"" INTEGER NOT NULL'}}
+
+def test_schema_with_no_line_endings():
+    """
+    Tests a schema that has no line endings in it (i.e. \n)
+    """
+    schema = ('CREATE TABLE groups (id           INTEGER PRIMARY KEY,                    '
+ 'name         TEXT NOT NULL)')
+    result = parse_out_fields(schema)
+    assert result == {'id': {'Schema': '"id" INTEGER PRIMARY KEY', 'Type': 'INTEGER'},
+                      'name': {'Schema': '"name" TEXT NOT NULL)', 'Type': 'TEXT'}}
+
