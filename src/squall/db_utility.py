@@ -131,7 +131,7 @@ def parse_fields(
     field_name = field_name.strip()
     if field_name in fields:
         # do not update the fields a second time
-        return
+        return fields
     fields[field_name] = {}
     fields[field_name]["Type"] = field_type
     fields[field_name]["Schema"] = field_schema
