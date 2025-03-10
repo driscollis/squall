@@ -56,9 +56,7 @@ def parse_out_fields(schema: str) -> dict[str, dict[str, str]]:
     fields: dict[str, dict] = {}
     schema = schema.replace("\t", "")
 
-    if "\n" in schema:
-        lines = schema.split("\n")[1:]
-    elif "CREATE TABLE" in schema and "(" in schema:
+    if "CREATE TABLE" in schema and "(" in schema:
         location = schema.find("(")
         lines = [schema[location:]]
 
@@ -123,13 +121,17 @@ def parse_fields(
     line = line.replace("(", "")
     line = line.replace(")", "")
     line = line.replace(",", "")
-
+    # End of field
     try:
         field_name, field_type, *_ = line.split()
     except ValueError:
         field_name = line
         field_type = line
 
+    field_name = field_name.strip()
+    if field_name in fields:
+        # do not update the fields a second time
+        return fields
     fields[field_name] = {}
     fields[field_name]["Type"] = field_type
     fields[field_name]["Schema"] = field_schema
@@ -138,12 +140,18 @@ def parse_fields(
 
 def parse_field_schema(line: str) -> str:
     field_schema = line.strip()
-    field_name, *parts = field_schema.split()
     field_schema = field_schema.replace(",", "")
+    if field_schema.startswith("("):
+        field_schema = field_schema.replace("(", "")
+    if ") WITHOUT" in line:
+        field_schema = field_schema[: field_schema.find(") WITHOUT")]
+    field_name, *parts = field_schema.split()
     field_name = field_name.replace("[", '"')
     field_name = field_name.replace("]", '"')
     field_name = field_name.replace("(", "")
     field_name = field_name.replace(")", "")
+    field_name = field_name.replace('"', "")
+    field_schema = line.strip()
     field_schema = f'"{field_name}" {" ".join(parts)}'
     field_schema = field_schema.replace(",", "")
     return field_schema
