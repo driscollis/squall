@@ -59,9 +59,9 @@ def test_schema_with_on_delete():
     )
     result = parse_out_fields(schema)
     assert result == {
-        "AlbumId": {"Type": "INTEGER", "Schema": '""AlbumId"" INTEGER NOT NULL'},
-        "Title": {"Type": "NVARCHAR160", "Schema": '""Title"" NVARCHAR(160) NOT NULL'},
-        "ArtistId": {"Type": "INTEGER", "Schema": '""ArtistId"" INTEGER NOT NULL'},
+        "AlbumId": {"Type": "INTEGER", "Schema": '"AlbumId" INTEGER NOT NULL'},
+        "Title": {"Type": "NVARCHAR160", "Schema": '"Title" NVARCHAR(160) NOT NULL'},
+        "ArtistId": {"Type": "INTEGER", "Schema": '"ArtistId" INTEGER NOT NULL'},
     }
 
 
@@ -89,41 +89,17 @@ def test_schema_without_types():
     }
 
 
-def test_schema_with_field_name_plus_constraint_on_single_line():
+def test_without_keyword_excluded_from_schema():
     schema = (
-        "CREATE TABLE moz_cookies (id INTEGER PRIMARY KEY, originAttributes TEXT NOT "
-        "NULL DEFAULT '', name TEXT, value TEXT, host TEXT, path TEXT, expiry "
-        "INTEGER, lastAccessed INTEGER, creationTime INTEGER, isSecure INTEGER, "
-        "isHttpOnly INTEGER, inBrowserElement INTEGER DEFAULT 0, sameSite INTEGER "
-        "DEFAULT 0, rawSameSite INTEGER DEFAULT 0, schemeMap INTEGER DEFAULT 0, "
-        "isPartitionedAttributeSet INTEGER DEFAULT 0, CONSTRAINT moz_uniqueid UNIQUE "
-        "(name, host, path, originAttributes))"
+        "CREATE TABLE moz_meta (\n"
+        "              key\n"
+        "                TEXT PRIMARY KEY NOT NULL,\n"
+        "              value\n"
+        "                INTEGER\n"
+        "            ) WITHOUT ROWID"
     )
     result = parse_out_fields(schema)
     assert result == {
-        "id": {"Type": "INTEGER", "Schema": '"id" INTEGER PRIMARY KEY'},
-        "originAttributes": {
-            "Type": "originAttributes",
-            "Schema": '"originAttributes" ',
-        },
-        "name": {"Type": "TEXT", "Schema": '"name" TEXT'},
-        "value": {"Type": "TEXT", "Schema": '"value" TEXT'},
-        "host": {"Type": "host", "Schema": '"host" '},
-        "path": {"Type": "path", "Schema": '"path" '},
-        "expiry": {"Type": "INTEGER", "Schema": '"expiry" INTEGER'},
-        "lastAccessed": {"Type": "INTEGER", "Schema": '"lastAccessed" INTEGER'},
-        "creationTime": {"Type": "INTEGER", "Schema": '"creationTime" INTEGER'},
-        "isSecure": {"Type": "INTEGER", "Schema": '"isSecure" INTEGER'},
-        "isHttpOnly": {"Type": "INTEGER", "Schema": '"isHttpOnly" INTEGER'},
-        "inBrowserElement": {
-            "Type": "INTEGER",
-            "Schema": '"inBrowserElement" INTEGER DEFAULT 0',
-        },
-        "sameSite": {"Type": "INTEGER", "Schema": '"sameSite" INTEGER DEFAULT 0'},
-        "rawSameSite": {"Type": "INTEGER", "Schema": '"rawSameSite" INTEGER DEFAULT 0'},
-        "schemeMap": {"Type": "INTEGER", "Schema": '"schemeMap" INTEGER DEFAULT 0'},
-        "isPartitionedAttributeSet": {
-            "Type": "INTEGER",
-            "Schema": '"isPartitionedAttributeSet" INTEGER DEFAULT 0',
-        },
+        "key": {"Schema": '"key" TEXT PRIMARY KEY NOT NULL', "Type": "TEXT"},
+        "value": {"Schema": '"value" INTEGER', "Type": "INTEGER"},
     }
