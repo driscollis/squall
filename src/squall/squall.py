@@ -45,9 +45,7 @@ class SQLiteClientApp(App):
 
     async def on_mount(self) -> None:
         path = self.args.filepath
-        self.notify(str(Path(path).exists()))
         if path and Path(path).exists():
-            self.notify("Loading DB")
             await self.update_ui(Path(self.args.filepath))
 
     @on(Button.Pressed, "#open_db_btn")
