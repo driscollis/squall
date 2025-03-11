@@ -22,6 +22,7 @@ DatabaseStructurePane {
     Tree {
         margin: 1;
         border: round gold;
+        height: 40;
     }
 }
 
@@ -34,7 +35,7 @@ TableViewerPane {
     DataTable {
         margin: 1;
         border: round gold;
-        height: 1fr;
+        height: 30;
     }
 }
 
@@ -42,7 +43,7 @@ ExecuteSQLPane {
     background: $panel-lighten-1;
 
     TextArea {
-        height: 20%;
+        height: 15%;
         margin: 1;
         border: round gold;
     }
@@ -53,14 +54,13 @@ ExecuteSQLPane {
 
     DataTable {
         background: $secondary-lighten-1;
-        height: 1fr;
+        height: 20;
         border: round gold;
         margin: 1;
     }
 
     RichLog {
-        height: 20%;
+        height: 10;
         margin: 1;
         border: round gold;
     }
-}
