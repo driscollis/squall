@@ -44,9 +44,10 @@ class SQLiteClientApp(App):
         yield Footer()
 
     async def on_mount(self) -> None:
-        path = self.args.filepath
-        if path and Path(path).exists():
-            await self.update_ui(Path(self.args.filepath))
+        path = Path(self.args.filepath) if self.args.filepath else Path("BAD")
+        if path and path.exists():
+            db_path = path.absolute()
+            await self.update_ui(db_path)
 
     @on(Button.Pressed, "#open_db_btn")
     async def action_open_database(self) -> None:
