@@ -1,5 +1,6 @@
 # squall.py
 
+from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from textual import on
 from textual.app import App, ComposeResult
@@ -21,8 +22,9 @@ class SQLiteClientApp(App):
 
     CSS_PATH = "squall.tcss"
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, cli_args: Namespace, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self.args = cli_args
         self.title = "Squall"
 
     def compose(self) -> ComposeResult:
@@ -40,6 +42,13 @@ class SQLiteClientApp(App):
             with TabPane("Execute SQL"):
                 yield Label("No data loaded")
         yield Footer()
+
+    async def on_mount(self) -> None:
+        path = self.args.filepath
+        self.notify(str(Path(path).exists()))
+        if path and Path(path).exists():
+            self.notify("Loading DB")
+            await self.update_ui(Path(self.args.filepath))
 
     @on(Button.Pressed, "#open_db_btn")
     async def action_open_database(self) -> None:
@@ -66,8 +75,18 @@ class SQLiteClientApp(App):
         self.title = f"Squall - {db_file_path}"
 
 
+def get_args() -> Namespace:
+    """
+    Get the arguments the user passed to the application
+    """
+    parser = ArgumentParser()
+    parser.add_argument("-f", "--filepath", help="Path to a SQLite database")
+    return parser.parse_args()
+
+
 def main() -> None:
-    app = SQLiteClientApp()
+    cli_args = get_args()
+    app = SQLiteClientApp(cli_args)
     app.run()
 
 
