@@ -35,10 +35,10 @@ def get_schema(db_path: Path) -> dict[str, dict]:
 
     tables = insp.get_table_names()
 
-    table_data = {}
+    table_data: dict = {}
     for table in tables:
         columns = insp.get_columns(table)
-        column_data = {}
+        column_data: dict = {}
         for column in columns:
             column_name = column["name"]
             column_type = str(column["type"])
