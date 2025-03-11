@@ -38,6 +38,7 @@ keywords = [
 ]
 dependencies = [
     "rich>=13.9.4",
+    "SQLAlchemy>=2.0.38",
     "textual>=2.1.1",
 ]
 packages = [
