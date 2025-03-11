@@ -18,6 +18,7 @@ class SQLiteClientApp(App):
     BINDINGS = [
         ("o", "open_database", "Open Database"),
         ("q", "quit", "Exit the program"),
+        ("f5", "run_sql", "Run SQL"),
     ]
 
     CSS_PATH = "squall.tcss"
@@ -53,12 +54,24 @@ class SQLiteClientApp(App):
     async def action_open_database(self) -> None:
         self.push_screen(FileBrowser(), self.update_ui)  # type: ignore
 
+    def action_run_sql(self) -> None:
+        """
+        Runs when F5 is pressed and executes the user's SQL when on the "Run SQL" tab
+        """
+        tabbed_content = self.query_one("#tabbed_ui", TabbedContent)
+        active_tab = tabbed_content.active
+        if active_tab == "run_sql":
+            self.execute_sql_pane.run_sql()
+
     async def update_ui(self, db_file_path: Path) -> None:
         if not Path(db_file_path).exists():
             self.notify("BAD PATH")
             return
 
         tabbed_content = self.query_one("#tabbed_ui", TabbedContent)
+        self.execute_sql_pane = ExecuteSQLPane(
+            db_file_path, title="Execute SQL", id="run_sql"
+        )
         await tabbed_content.clear_panes()
 
         await tabbed_content.add_pane(
@@ -67,9 +80,9 @@ class SQLiteClientApp(App):
             )
         )
         await tabbed_content.add_pane(
-            TableViewerPane(db_file_path, title="Table Viewer")
+            TableViewerPane(db_file_path, title="Table Viewer", id="table_viewer")
         )
-        await tabbed_content.add_pane(ExecuteSQLPane(db_file_path, title="Execute SQL"))
+        await tabbed_content.add_pane(self.execute_sql_pane)
         tabbed_content.active = "db_structure"
         self.title = f"Squall - {db_file_path}"
 
