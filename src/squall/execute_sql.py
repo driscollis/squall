@@ -46,7 +46,7 @@ class ExecuteSQLPane(TabPane):
 
         try:
             result = db_utility.run_sql(self.db_path, sql)
-        except sqlite3.OperationalError as e:
+        except (sqlite3.OperationalError, TypeError) as e:
             error_msg = str(e)
         end = time.time()
         row_count = 0
