@@ -1,5 +1,6 @@
 # table_viewer.py
 
+import sqlite3
 from squall import db_utility
 
 from pathlib import Path
@@ -33,6 +34,12 @@ class TableViewerPane(TabPane):
     @on(Select.Changed, "#table_names_select")
     def update_sqlite_table_view(self) -> None:
         current_table = str(self.app.query_one("#table_names_select", Select).value)
+
+        try:
+            data = db_utility.get_data_from_table(self.db_path, current_table)
+        except sqlite3.OperationalError:
+            return
+
         data = db_utility.get_data_from_table(self.db_path, current_table)
         self.columns = data[0]
         table = self.query_one(DataTable)
