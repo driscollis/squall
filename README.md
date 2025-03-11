@@ -8,6 +8,14 @@ Here is what Squall looks like using the [Chinook database](https://github.com/l
 
 ![squall_demo](https://github.com/user-attachments/assets/ecac6ac3-4d42-4d3d-9c15-2e129102a087)
 
+## Command-Line Options
+
+Currently, there is only one command-line option: `-f` or `--filename`, which allows you to pass a database path to Squall to load.
+
+Example Usage:
+
+`squall -f path/to/database.sqlite`
+
 ## Prerequisites
 
 The instructions assume you have uv or pip installed.
@@ -31,8 +39,6 @@ If you want to upgrade to the latest version of Squall SQL, then you will want t
 `uv tool install git+https://github.com/driscollis/squall -U --force`
 
 ## Installing Using pip
-
-Update the version number as appropriate:
 
 `pip install squall-sql`
 
