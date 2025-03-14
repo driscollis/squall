@@ -1,5 +1,7 @@
 # squall.py
 
+import logging.config
+
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 
@@ -14,8 +16,12 @@ from textual.widgets import Label, TabbedContent, TabPane
 from squall import db_utility
 from squall.database_structure_tree import DatabaseStructurePane
 from squall.execute_sql import ExecuteSQLPane
+from squall.log_configuration import log_config_dict
 from squall.screens import FileBrowser
 from squall.table_viewer import TableViewerPane
+
+logging.config.dictConfig(log_config_dict)
+logger = logging.getLogger("squall")
 
 
 class SQLiteClientApp(App):
