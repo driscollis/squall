@@ -64,3 +64,4 @@ ExecuteSQLPane {
         margin: 1;
         border: round gold;
     }
+}
