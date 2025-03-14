@@ -1,7 +1,6 @@
 # edit_row.py
 
 import sqlite3
-from pathlib import Path
 
 from squall.screens import WarningScreen
 from squall import db_utility
@@ -24,7 +23,6 @@ class EditRowScreen(ModalScreen):
         data: dict[str, tuple],
         table_name: str,
         primary_keys: tuple[str],
-        db_path: Path,
         *args,
         **kwargs,
     ) -> None:
@@ -32,7 +30,6 @@ class EditRowScreen(ModalScreen):
         self.data = data
         self.table_name = table_name
         self.primary_keys = primary_keys
-        self.db_path = db_path
         self.title = f"Editing {table_name}"
 
     def compose(self) -> ComposeResult:
@@ -64,21 +61,26 @@ class EditRowScreen(ModalScreen):
     @on(Button.Pressed, "#edit_save_btn")
     def on_save_changes(self) -> None:
         # column_types = db_utility.get_column_types(self.db_path, self.table_name)
-        primary_keys = db_utility.get_primary_keys(self.db_path, self.table_name)
-        print(f"{primary_keys  =  }")
+        # primary_keys = db_utility.get_primary_keys(self.db_path, self.table_name)
+        return
+        print(f"{self.primary_keys  =  }")
         column_values = [
             self.query_one(f"#{column}", Input).value
             for column in self.data
-            if column not in primary_keys[0]
+            if column not in self.primary_keys[0]
         ]
         # Create loop over keys in data to grab Input values
         # May need some way of casting the input values to the correct type
         # Maybe use field schema?
         set_clause = ", ".join(
-            [f"{column} = ?" for column in self.data if column not in primary_keys[0]]
+            [
+                f"{column} = ?"
+                for column in self.data
+                if column not in self.primary_keys[0]
+            ]
         )
-        if len(primary_keys[0]) == 1:
-            primary_key = primary_keys[0][0]
+        if len(self.primary_keys[0]) == 1:
+            primary_key = self.primary_keys[0][0]
             primary_key_value = self.query_one(f"#{primary_key}", Input).value
             sql = f"UPDATE {self.table_name} SET {set_clause} WHERE {primary_key} = ?"
             print(sql, (*column_values, primary_key_value))
