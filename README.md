@@ -42,6 +42,12 @@ If you want to upgrade to the latest version of Squall SQL, then you will want t
 
 `pip install squall-sql`
 
+## Running Squall from Source
+
+If you cloned the package and want to run Squall, one way to do that is to navigate to the cloned repo on your hard drive using your Terminal. Then run the following command while inside the `src` folder:
+
+`python -m squall.squall`
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/driscollis/squall/blob/main/LICENSE) file for details.
