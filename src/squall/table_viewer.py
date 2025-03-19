@@ -71,4 +71,6 @@ class TableViewerPane(TabPane):
             data = dict(zip(self.columns, row_data))
             logger.info(primary_keys)
             logger.info(data)
-            self.app.push_screen(EditRowScreen(data, current_table, primary_keys[0]))
+            self.app.push_screen(
+                EditRowScreen(self.db_path, data, current_table, primary_keys)
+            )

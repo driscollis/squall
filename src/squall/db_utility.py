@@ -97,5 +97,8 @@ def run_row_update(
     """
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    cursor.execute(sql, (*column_values, primary_key_value))
+    if primary_key_value:
+        cursor.execute(sql, (*column_values, primary_key_value))
+    else:
+        cursor.execute(sql, column_values)
     conn.commit()
