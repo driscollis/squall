@@ -2,6 +2,9 @@
 
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
+
+from sqlalchemy.engine.reflection import Inspector
+
 from textual import on, work
 from textual.app import App, ComposeResult
 from textual.containers import Center
@@ -28,7 +31,7 @@ class SQLiteClientApp(App):
         super().__init__(*args, **kwargs)
         self.args = cli_args
         self.title = "Squall"
-        self.db_inspector = None
+        self.db_inspector: None | Inspector = None
 
     def compose(self) -> ComposeResult:
         db_path = Input(id="db_path_input")
@@ -50,7 +53,7 @@ class SQLiteClientApp(App):
         path = Path(self.args.filepath) if self.args.filepath else Path("BAD")
         if path and path.exists():
             db_path = path.absolute()
-            await self.db_parsing(db_path)
+            await self.db_parsing(db_path)  # type: ignore
 
     @on(Button.Pressed, "#open_db_btn")
     async def action_open_database(self) -> None:
@@ -97,7 +100,7 @@ class SQLiteClientApp(App):
         self.table_names.sort()
         self.db_schema = db_utility.get_schema(self.table_names, self.db_inspector)
 
-        self.call_from_thread(self.update_ui, db_file_path)
+        self.call_from_thread(self.update_ui, db_file_path)  # type: ignore
 
 
 def get_args() -> Namespace:
