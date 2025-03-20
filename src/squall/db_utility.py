@@ -6,12 +6,12 @@ from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
+from sqlalchemy.engine.reflection import Inspector
 
 
-def get_table_names(db_path: Path) -> list[str]:
+def get_db_inspector(db_path: Path) -> Inspector:
     engine = create_engine(rf"sqlite:///{db_path}")
-    insp = inspect(engine)
-    return insp.get_table_names()
+    return inspect(engine)
 
 
 def get_data_from_table(db_path: Path, table_name: str) -> list[tuple]:
@@ -29,15 +29,10 @@ def get_data_from_table(db_path: Path, table_name: str) -> list[tuple]:
     return data
 
 
-def get_schema(db_path: Path) -> dict[str, dict]:
-    engine = create_engine(rf"sqlite:///{db_path}")
-    insp = inspect(engine)
-
-    tables = insp.get_table_names()
-
+def get_schema(tables: list[str], db_inspector: Inspector) -> dict[str, dict]:
     table_data: dict = {}
     for table in tables:
-        columns = insp.get_columns(table)
+        columns = db_inspector.get_columns(table)
         column_data: dict = {}
         for column in columns:
             column_name = column["name"]
@@ -60,6 +55,7 @@ def get_primary_keys(db_path: Path, table_name: str) -> list[tuple[str]]:
     return result
 
 
+# Currently not used
 def get_column_types(db_path: Path, table_name: str) -> dict[str, str]:
     """
     Get all the column data types and return it as a dictionary

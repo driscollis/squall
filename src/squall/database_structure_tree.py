@@ -1,18 +1,13 @@
 # database_structure.py
 
-from squall import db_utility
-
-from pathlib import Path
 from textual.app import ComposeResult
 from textual.widgets import TabPane, Tree
 
 
 class DatabaseStructurePane(TabPane):
-    def __init__(self, db_path: Path, *args, **kwargs) -> None:
+    def __init__(self, db_schema: dict[str, dict], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.db_path = db_path
-        if self.db_path.exists():
-            self.db_schema = db_utility.get_schema(self.db_path)
+        self.db_schema = db_schema
 
     def compose(self) -> ComposeResult:
         tree: Tree[str] = Tree(f"Tables ({len(self.db_schema.keys())})")
