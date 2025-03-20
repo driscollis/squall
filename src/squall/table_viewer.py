@@ -16,7 +16,6 @@ logger = logging.getLogger("squall")
 
 
 class TableViewerPane(TabPane):
-
     def __init__(self, db_path: Path, table_names: list[str], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.db_path = db_path
