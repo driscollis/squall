@@ -2,12 +2,13 @@
 
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
-from textual import on
+from textual import on, work
 from textual.app import App, ComposeResult
 from textual.containers import Center
 from textual.widgets import Button, Footer, Header, Input
 from textual.widgets import Label, TabbedContent, TabPane
 
+from squall import db_utility
 from squall.database_structure_tree import DatabaseStructurePane
 from squall.execute_sql import ExecuteSQLPane
 from squall.screens import FileBrowser
@@ -27,6 +28,7 @@ class SQLiteClientApp(App):
         super().__init__(*args, **kwargs)
         self.args = cli_args
         self.title = "Squall"
+        self.db_inspector = None
 
     def compose(self) -> ComposeResult:
         db_path = Input(id="db_path_input")
@@ -48,11 +50,11 @@ class SQLiteClientApp(App):
         path = Path(self.args.filepath) if self.args.filepath else Path("BAD")
         if path and path.exists():
             db_path = path.absolute()
-            await self.update_ui(db_path)
+            await self.db_parsing(db_path)
 
     @on(Button.Pressed, "#open_db_btn")
     async def action_open_database(self) -> None:
-        self.push_screen(FileBrowser(), self.update_ui)  # type: ignore
+        self.push_screen(FileBrowser(), self.db_parsing)  # type: ignore
 
     def action_run_sql(self) -> None:
         """
@@ -64,10 +66,6 @@ class SQLiteClientApp(App):
             self.execute_sql_pane.run_sql()
 
     async def update_ui(self, db_file_path: Path) -> None:
-        if not Path(db_file_path).exists():
-            self.notify("BAD PATH")
-            return
-
         tabbed_content = self.query_one("#tabbed_ui", TabbedContent)
         self.execute_sql_pane = ExecuteSQLPane(
             db_file_path, title="Execute SQL", id="run_sql"
@@ -76,15 +74,30 @@ class SQLiteClientApp(App):
 
         await tabbed_content.add_pane(
             DatabaseStructurePane(
-                db_file_path, title="Database Structure", id="db_structure"
+                self.db_schema, title="Database Structure", id="db_structure"
             )
         )
         await tabbed_content.add_pane(
-            TableViewerPane(db_file_path, title="Table Viewer", id="table_viewer")
+            TableViewerPane(
+                db_file_path, self.table_names, title="Table Viewer", id="table_viewer"
+            )
         )
         await tabbed_content.add_pane(self.execute_sql_pane)
         tabbed_content.active = "db_structure"
         self.title = f"Squall - {db_file_path}"
+
+    @work(exclusive=True, thread=True, group="db_inspect")
+    def db_parsing(self, db_file_path: Path) -> None:
+        if not Path(db_file_path).exists():
+            self.notify("BAD PATH")
+            return
+
+        self.db_inspector = db_utility.get_db_inspector(db_file_path)
+        self.table_names = self.db_inspector.get_table_names()
+        self.table_names.sort()
+        self.db_schema = db_utility.get_schema(self.table_names, self.db_inspector)
+
+        self.call_from_thread(self.update_ui, db_file_path)
 
 
 def get_args() -> Namespace:

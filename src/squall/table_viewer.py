@@ -13,11 +13,10 @@ from textual.widgets import TabPane
 class TableViewerPane(TabPane):
     BINDINGS = [("escape", "exit_screen", "Exit")]
 
-    def __init__(self, db_path: Path, *args, **kwargs) -> None:
+    def __init__(self, db_path: Path, table_names: list[str], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.db_path = db_path
-        self.tables = db_utility.get_table_names(self.db_path)
-        self.tables.sort()
+        self.tables = table_names
         self.selected_row_key = None
         self.columns: tuple = tuple()
 
